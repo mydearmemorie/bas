@@ -117,11 +117,23 @@ class DefPath():
             fillColor={self.fillColor}
             zIndex={self.zIndex}
         }}
+
         """
         return baspath
+def tobas(viewbox:tuple,paths:list,time:int=1000,outputfile:str="outputbas.txt")->str:
+    try:
+        with open(outputfile,"w") as f:
+            for i in range(len(paths)):
+                content=DefPath(viewbox,paths[i],f"p{i}").tobaspath()
+                f.write(content)
+            for i in range(len(paths)):
+                f.write(f"set p{i} {{}} {time}ms\n")
+        return "success"
+    except:
+        return "failed"
 if __name__=="__main__":
     img=SvgImage("test.svg")
     paths=img.getpaths()
-    p1=DefPath(img.getviewbox(),paths[0],"p1",1)
-    print(p1.tobaspath())
+    viewbox=img.getviewbox()
+    tobas(viewbox,paths)
     input()
